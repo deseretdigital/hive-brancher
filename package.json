@@ -1,0 +1,13 @@
+{
+  "name": "hive-brancher",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Matt Montgomery <mmontgomery@deseretdigital.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "dotenv": "^2.0.0",
+    "github-api": "^2.3.0",
+    "simple-git": "^1.65.0"
+  }
+}
