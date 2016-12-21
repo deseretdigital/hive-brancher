@@ -5,7 +5,8 @@ module.exports = [
         build: [
             {
                 proc: 'composer',
-                args: ['install', '-q', '-d application/']
+                args: ['install', '-q', '--working-dir=application/'],
+                env: { SYMFONY_ENV: 'stage' }
             }
         ]
     },
