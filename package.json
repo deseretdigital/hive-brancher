@@ -8,6 +8,7 @@
     "bluebird": "^3.4.6",
     "dotenv": "^2.0.0",
     "github-api": "^2.3.0",
+    "lodash": "^4.17.4",
     "simple-git": "^1.65.0"
   }
 }
