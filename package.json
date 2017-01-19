@@ -9,6 +9,7 @@
     "dotenv": "^2.0.0",
     "github-api": "^2.3.0",
     "lodash": "^4.17.4",
+    "remove": "^0.1.5",
     "simple-git": "^1.65.0"
   }
 }

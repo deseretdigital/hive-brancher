@@ -22,5 +22,5 @@ Promise.resolve(projects)
     .then((branchList) => writeStatus(branchList, config))
     .then((branches) => cleanupBranches(branches, config))
     .then((...args) => {
-        console.log(...args);
+        
     })
