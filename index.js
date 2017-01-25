@@ -11,6 +11,9 @@ const buildBranches = require('./lib/buildBranches');
 const setupBranches = require('./lib/setupBranches');
 const writeStatus = require('./lib/writeStatus');
 const cleanupBranches = require('./lib/cleanupBranches');
+const log = require('./lib/log');
+
+log('Brancher started');
 
 Promise.resolve(projects)
     .map((config) => prepRepo(config, buildPath), { concurrency: 1 })
@@ -20,5 +23,5 @@ Promise.resolve(projects)
     .then((branchList) => writeStatus(branchList, config))
     .then((branches) => cleanupBranches(branches, config))
     .then((...args) => {
-
-    })
+        log('Brancher finished');
+    });
