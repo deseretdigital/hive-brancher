@@ -6,3 +6,11 @@ can be tested against.
 - Designed to be run repeatedly to check for updates
 - Will remove branches that have been deleted
 - Multi-repository
+
+
+## TODO
+
+This is still a work in progress. Upcoming features may include:
+
+- A web view so you can easily see which branches have been built
+- Github notices
