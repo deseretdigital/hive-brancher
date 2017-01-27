@@ -8,6 +8,14 @@ module.exports = {
                     proc: 'composer',
                     args: ['install', '-q', '--working-dir=application/'],
                     env: { SYMFONY_ENV: 'stage' }
+                },
+                {
+                    proc: 'chmod',
+                    args: ['-R', 'a+rwx', 'application/app/cache']
+                },
+                {
+                    proc: 'chmod',
+                    args: ['-R', 'a+rwx', 'application/app/logs']
                 }
             ]
         },
@@ -22,12 +30,16 @@ module.exports = {
                 {
                     proc: 'yarn',
                     args: ['build']
-                }
+                },
+		{
+		    proc: 'gulp',
+		    args: ['build']
+		}
             ]
         }
     ],
-    apacheConfigDir: '/tmp/sites-dynamic',
-    buildPath: `${__dirname}/build`,
+    apacheConfigDir: '/etc/apache2/sites-dynamic',
+    buildPath: `/var/dynamic/hive-branches`,
     stageDomain: 'stage.hive.pub',
     testDomain: 'test.hive.pub',
     stageDocRoot: '',
