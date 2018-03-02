@@ -3,6 +3,8 @@ module.exports = {
         {
             owner: 'deseretdigital',
             repo: 'hive-api',
+            user: 'XXXXX',
+            token: 'XXXXX',
             build: [
                 {
                     proc: 'composer',
@@ -22,6 +24,8 @@ module.exports = {
         {
             owner: 'deseretdigital',
             repo: 'hive-ui',
+            user: 'XXXXX',
+            token: 'XXXXX',
             build: [
                 {
                     proc: 'yarn',
@@ -31,10 +35,10 @@ module.exports = {
                     proc: 'yarn',
                     args: ['build']
                 },
-		{
-		    proc: 'gulp',
-		    args: ['build']
-		}
+        {
+            proc: 'gulp',
+            args: ['build']
+        }
             ]
         }
     ],
