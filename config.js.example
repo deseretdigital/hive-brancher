@@ -19,7 +19,8 @@ module.exports = {
                     proc: 'chmod',
                     args: ['-R', 'a+rwx', 'application/app/logs']
                 }
-            ]
+            ],
+            webhook: ''
         },
         {
             owner: 'deseretdigital',
@@ -35,12 +36,19 @@ module.exports = {
                     proc: 'yarn',
                     args: ['build']
                 },
-        {
-            proc: 'gulp',
-            args: ['build']
+                {
+                    proc: 'gulp',
+                    args: ['build']
+                }
+            ],
+            webhook: ''
         }
-            ]
-        }
+    ],
+    postBuildProcess: [
+      {
+        proc: 'apachectl',
+        args: ['restart']
+      }
     ],
     apacheConfigDir: '/etc/apache2/sites-dynamic',
     buildPath: `/var/dynamic/hive-branches`,
