@@ -2,7 +2,11 @@ const find = require('lodash/find');
 
 module.exports = function apacheConfigTemplate(repos, branchName, config) {
     const { buildPath, siteName, testDomain, apacheLogDir } = config;
-    const mlBranchName = repos.some(obj => obj.repo === 'MY-REPO-NAME') ? branchName : 'master';
+    const whiteListIdx = Array.isArray(whitelist)
+      ? whitelist.map(({ branch }) => branch).indexOf(branchName)
+      : -1;
+    const subdomain =
+      whiteListIdx !== -1 ? whitelist[whiteListIdx].subdomain : branchName;
     return `
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
@@ -11,8 +15,8 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
     Header add X-Server "stage"
     SetEnv APPLICATION_ENV "stage"
 
-    DocumentRoot ${buildPath}/branch_MY-REPO-NAME_${mlBranchName}/public
-    <Directory ${buildPath}/branch_MY-REPO-NAME_${mlBranchName}/public>
+    DocumentRoot ${buildPath}/branch_MY-REPO-NAME_${subdomain}/public
+    <Directory ${buildPath}/branch_MY-REPO-NAME_${subdomain}/public>
         Options -Indexes +FollowSymLinks
         AllowOverride All
         Order allow,deny
@@ -25,8 +29,8 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
     # alert, emerg.
     LogLevel warn
 
-    ErrorLog ${apacheLogDir}/${branchName}.${testDomain}.error.log
-    CustomLog ${apacheLogDir}/${branchName}.${testDomain}.access.log combined
+    ErrorLog ${apacheLogDir}/${subdomain}.${testDomain}.error.log
+    CustomLog ${apacheLogDir}/${subdomain}.${testDomain}.access.log combined
 </VirtualHost>
     `;
 }
