@@ -1,16 +1,7 @@
 const find = require('lodash/find');
 
 module.exports = function apacheConfigTemplate(repos, branchName, config) {
-    let whitelist = [];
-    try {
-      whitelist = require("./whitelist.json");
-    } catch (e) {}
-    const { buildPath, siteName, testDomain, apacheLogDir } = config;
-    const whiteListIdx = Array.isArray(whitelist)
-      ? whitelist.map(({ branch }) => branch).indexOf(branchName)
-      : -1;
-    const subdomain =
-      whiteListIdx !== -1 ? whitelist[whiteListIdx].subdomain : branchName;
+    const subdomain = getSubdomainFromBranchName(branchName);
     return `
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
