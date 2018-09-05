@@ -46,6 +46,10 @@ export default class App extends Component {
       alert('Subdomain must contain letters, numbers, underscores, or dashes only');
       return;
     }
+    if(this.state.subdomain === 'master' || this.state.branch === 'master') {
+      alert('Master is a reserved branch and subdomain that cannot be used');
+      return;
+    }
     saveWhitelist([
       ...whitelist,
       { branch: this.state.branch, subdomain: this.state.subdomain }
