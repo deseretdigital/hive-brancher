@@ -71,6 +71,7 @@ export default class App extends Component {
         </ul>
         <hr />
         <h1>New Subdomain</h1>
+        <p>This tool does not check against github, or otherwise perform logic to make sure the branch you type exists.</p>
         <div className="form">
           <label>
             Subdomain name
