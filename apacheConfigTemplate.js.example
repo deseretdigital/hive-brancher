@@ -1,7 +1,7 @@
 const find = require('lodash/find');
 
 module.exports = function apacheConfigTemplate(repos, branchName, config) {
-    const subdomain = const subdomain = getSubdomainFromBranchName(branchName);
+    const subdomain = getSubdomainFromBranchName(branchName);
     return `
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
