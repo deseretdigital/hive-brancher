@@ -8,6 +8,10 @@ can be tested against.
 - Multi-repository
 - Webhook on branch post-build
 
+## UI
+- Run "node server.js" to run an express server on port 3000 or pass in a custom port like this "node server.js 8000"
+- The UI is a simple form that lists out the contents of whitelist.json and allows editing
+
 ## TODO
 
 This is still a work in progress. Upcoming features may include:
