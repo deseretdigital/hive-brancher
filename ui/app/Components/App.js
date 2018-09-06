@@ -11,6 +11,7 @@ export default class App extends Component {
   static propTypes = {
     loadWhitelist: PropTypes.func.isRequired,
     saveWhitelist: PropTypes.func.isRequired,
+    loadBranches: PropTypes.func.isRequired,
     whitelist: PropTypes.arrayOf(PropTypes.shape({})).isRequired
   };
 
@@ -21,6 +22,7 @@ export default class App extends Component {
 
   componentWillMount() {
     this.props.loadWhitelist();
+    this.props.loadBranches();
   }
 
   handleDeleteSubdomain(subdomainInfo) {
@@ -57,7 +59,8 @@ export default class App extends Component {
   }
 
   render() {
-    const { whitelist } = this.props;
+    const { branches, whitelist } = this.props;
+    console.log(branches);
     return (
       <div className="app">
         <h1>Current Subdomains</h1>
@@ -79,7 +82,15 @@ export default class App extends Component {
           </label>
           <label>
             Branch name
-            <input onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} />
+            {branches.length === 0 ? (
+              <input onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} />
+            ) : (
+              <select onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch}>
+                {branches.map(branch => (
+                  <option key={branch} value={branch}>{branch}</option>
+                ))}
+              </select>
+            )}
           </label>
           <button className="save" onClick={() => this.handleSaveSubdomain()}>Save</button>
         </div>
