@@ -54,7 +54,7 @@ export default class App extends Component {
     }
     saveWhitelist([
       ...whitelist,
-      { branch: this.state.branch, subdomain: this.state.subdomain }
+      { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase() }
     ])
   }
 
