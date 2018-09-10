@@ -20,22 +20,23 @@ app.post('/save-whitelist', (req, res, next) => {
   res.send(req.body.whitelist);
   next();
 });
-Promise.resolve(projects)
-    .map((project) => getBranches(project, null, null, buildPath, false), { concurrency: 1 })
-    .then((repoList) => {
-      const allBranches = [];
-      repoList.forEach(repo => {
-        repo.branches.forEach(branch => {
-          if(branch.name !== 'master' && allBranches.indexOf(branch.name) === -1) {
-            allBranches.push(branch.name);
-          }
+
+app.get('/branches', (req, res, next) => {
+  Promise.resolve(projects)
+      .map((project) => getBranches(project, null, null, buildPath, false), { concurrency: 1 })
+      .then((repoList) => {
+        const allBranches = [];
+        repoList.forEach(repo => {
+          repo.branches.forEach(branch => {
+            if(branch.name !== 'master' && allBranches.indexOf(branch.name) === -1) {
+              allBranches.push(branch.name);
+            }
+          });
         });
-      });
-      allBranches.sort();
-      app.get('/branches', (req, res, next) => {
+        allBranches.sort();
         res.send(allBranches);
         next();
       });
-    });
+});
 
 app.listen(port, () => console.log('Listening on port ' + port));
