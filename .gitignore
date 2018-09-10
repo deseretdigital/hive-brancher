@@ -6,3 +6,4 @@ config.js
 .projects.json
 apacheConfigTemplate.js
 whitelist.json
+brancher.sh
