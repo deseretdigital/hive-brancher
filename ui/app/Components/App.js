@@ -17,7 +17,8 @@ export default class App extends Component {
 
   state = {
     subdomain: '',
-    branch: ''
+    branch: '',
+    user: ''
   }
 
   componentWillMount() {
@@ -52,9 +53,13 @@ export default class App extends Component {
       alert('Master is a reserved branch and subdomain that cannot be used');
       return;
     }
+    if(!this.state.user) {
+      alert('Please enter a user name');
+      return;
+    }
     saveWhitelist([
       ...whitelist,
-      { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase() }
+      { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user }
     ])
   }
 
@@ -66,7 +71,7 @@ export default class App extends Component {
         <ul>
           {whitelist.filter(item => ignore.indexOf(item.branch) === -1).map(item => (
             <li>
-              <span>{item.subdomain}  ({item.branch})</span>
+              <span>{item.subdomain} ({item.branch}) Created by {item.user}</span>
               <button className="delete" onClick={() => this.handleDeleteSubdomain(item)}>Delete</button>
           </li>
           ))}
@@ -84,12 +89,16 @@ export default class App extends Component {
             {branches.length === 0 ? (
               <input onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} />
             ) : (
-              <select onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch}>
+              <select onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} >
                 {branches.map(branch => (
                   <option key={branch} value={branch}>{branch}</option>
                 ))}
               </select>
             )}
+          </label>
+          <label>
+            User
+            <input onChange={(ev) => this.setState({ user: ev.target.value })} type="text" value={this.state.user} />
           </label>
           <button className="save" onClick={() => this.handleSaveSubdomain()}>Save</button>
         </div>
