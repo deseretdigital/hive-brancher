@@ -73,7 +73,7 @@ export default class App extends Component {
         <ul>
           {whitelist.filter(item => ignore.indexOf(item.branch) === -1).map(item => (
             <li>
-              <span>{item.subdomain} ({item.branch}) Created by {item.user} on {item.timestamp}</span>
+              <span>{item.subdomain} ({item.branch}) Created by {item.user} on {item.created}</span>
               <button className="delete" onClick={() => this.handleDeleteSubdomain(item)}>Delete</button>
           </li>
           ))}
