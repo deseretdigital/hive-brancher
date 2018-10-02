@@ -37,6 +37,8 @@ export default class App extends Component {
 
   handleSaveSubdomain() {
     const { whitelist, saveWhitelist } = this.props;
+    let currentDate = new Date();
+
     if(!this.state.branch) {
       alert('Please enter a branch');
       return;
@@ -59,7 +61,7 @@ export default class App extends Component {
     }
     saveWhitelist([
       ...whitelist,
-      { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user }
+      { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString() }
     ])
   }
 
@@ -71,7 +73,7 @@ export default class App extends Component {
         <ul>
           {whitelist.filter(item => ignore.indexOf(item.branch) === -1).map(item => (
             <li>
-              <span>{item.subdomain} ({item.branch}) Created by {item.user}</span>
+              <span>{item.subdomain} ({item.branch}) Created by {item.user} on {item.timestamp}</span>
               <button className="delete" onClick={() => this.handleDeleteSubdomain(item)}>Delete</button>
           </li>
           ))}
