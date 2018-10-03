@@ -47,18 +47,25 @@ export default class App extends Component {
       alert('Please enter a subdomain');
       return;
     }
-    if(!/^[a-zA-Z0-9_\-]+$/.test(this.state.subdomain)) {
-      alert('Subdomain must contain letters, numbers, underscores, or dashes only');
-      return;
-    }
-    if(this.state.subdomain === 'master' || this.state.branch === 'master') {
-      alert('Master is a reserved branch and subdomain that cannot be used');
-      return;
-    }
     if(!this.state.user) {
       alert('Please enter a user name');
       return;
     }
+    if(!/^[a-zA-Z0-9_\-]+$/.test(this.state.subdomain)) {
+      alert('Subdomain must contain letters, numbers, underscores, or dashes only');
+      return;
+    }
+    if(!/^[a-zA-Z\-]+$/.test(this.state.user)) {
+      alert('User name must contain only letters');
+      return;
+    }
+
+    if(this.state.subdomain === 'master' || this.state.branch === 'master') {
+      alert('Master is a reserved branch and subdomain that cannot be used');
+      return;
+    }
+
+
     saveWhitelist([
       ...whitelist,
       { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString() }
