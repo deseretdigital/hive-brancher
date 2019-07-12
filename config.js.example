@@ -5,7 +5,7 @@ module.exports = {
             owner: 'deseretdigital',
             repo: 'ksl-api',
             user: 'sdickson',
-            token: 'ef94fedee23148c1e0ce7d3554ec2724d52fbf9a',
+            token: 'xxxx',
             build: [
                 {
                     proc: 'rm',
@@ -44,7 +44,7 @@ module.exports = {
             owner: 'deseretdigital',
             repo: 'm-ksl-cars',
             user: 'sdickson',
-            token: 'ef94fedee23148c1e0ce7d3554ec2724d52fbf9a',
+            token: 'xxxx',
             build: [
                 {
                     proc: 'sudo',
@@ -73,7 +73,7 @@ module.exports = {
             owner: 'deseretdigital',
             repo: 'm-ksl-myaccount',
             user: 'sdickson',
-            token: 'ef94fedee23148c1e0ce7d3554ec2724d52fbf9a',
+            token: 'xxxx',
             build: [
                 {
                     proc: 'sudo',
