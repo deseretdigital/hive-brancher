@@ -1,32 +1,291 @@
 const find = require('lodash/find');
-const { getSubdomainFromBranchName } = require('./lib/getWhitelist');
 
 module.exports = function apacheConfigTemplate(repos, branchName, config) {
-    const subdomain = getSubdomainFromBranchName(branchName);
-    return `
-<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    ServerName ${branchName}.${testDomain}
+	  let whitelist = [];
+	  try {
+		      whitelist = require("./whitelist.json");
+		    } catch (e) {}
+	  const { buildPath, siteName, testDomain, apacheLogDir } = config;
+	  const whiteListIdx = Array.isArray(whitelist)
+	    ? whitelist.map(({ branch }) => branch).indexOf(branchName)
+	    : -1;
+	  const subdomain =
+		    whiteListIdx !== -1 ? whitelist[whiteListIdx].subdomain : branchName;
 
-    Header add X-Server "stage"
-    SetEnv APPLICATION_ENV "stage"
+	  const carsBranch = repos.some(obj => obj.repo === 'm-ksl-cars') ? branchName : 'master';
+	  const myAccountBranch = repos.some(obj => obj.repo === 'm-ksl-myaccount') ? branchName : 'master';
+	  const apiBranch = repos.some(obj => obj.repo === 'ksl-api') ? branchName : 'master';
+	    return `
+	    <VirtualHost *:80>
+		      ServerName ${subdomain}.api.${testDomain}
 
-    DocumentRoot ${buildPath}/branch_MY-REPO-NAME_${subdomain}/public
-    <Directory ${buildPath}/branch_MY-REPO-NAME_${subdomain}/public>
-        Options -Indexes +FollowSymLinks
-        AllowOverride All
-        Order allow,deny
-        Allow from all
+	      DocumentRoot "${buildPath}/branch_ksl-api_${apiBranch}/public_html"
 
-        DirectoryIndex index.php index.html
-    </Directory>
+	      <Directory "${buildPath}/branch_ksl-api_${apiBranch}/public_html">
+		              AllowOverride All
+	              Order allow,deny
+	              allow from all
+	              Require all granted
+	      </Directory>
 
-    # Possible values include: debug, info, notice, warn, error, crit,
-    # alert, emerg.
-    LogLevel warn
+		      php_value display_errors Off
+	      php_value error_reporting 22519
+	      php_flag short_open_tag on
 
-    ErrorLog ${apacheLogDir}/${subdomain}.${testDomain}.error.log
-    CustomLog ${apacheLogDir}/${subdomain}.${testDomain}.access.log combined
-</VirtualHost>
-    `;
+	      ErrorLog ${apacheLogDir}/api.${subdomain}.${testDomain}.error.log
+
+	      SetEnv APPLICATION_ENV apistage
+	</VirtualHost>
+		<VirtualHost *:443>
+		      ServerName ${subdomain}.api.${testDomain}
+
+	      DocumentRoot "${buildPath}/branch_ksl-api_${apiBranch}/public_html"
+
+	      <Directory "${buildPath}/branch_ksl-api_${apiBranch}/public_html">
+		              AllowOverride All
+	              Order allow,deny
+	              allow from all
+	              Require all granted
+	      </Directory>
+
+		      php_value display_errors Off
+	      php_value error_reporting 22519
+	      php_flag short_open_tag on
+
+	      ErrorLog ${apacheLogDir}/api.${subdomain}.${testDomain}.error.log
+
+	      SetEnv APPLICATION_ENV apistage
+
+		SSLEngine on
+	        SSLOptions +StrictRequire
+
+	        # Support only for strong cryptography
+	        SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
+
+	        SSLCertificateFile /etc/apache2/cert/wildcard.ksl.com.crt
+	        SSLCertificateKeyFile /etc/apache2/cert/wildcard.ksl.com.key
+	        SSLCertificateChainFile /etc/apache2/cert/gd-bundle.crt
+
+	</VirtualHost>
+		<VirtualHost *:80>
+		RewriteEngine On
+	RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]
+	    ServerAdmin webmaster@localhost
+	        ServerName ${subdomain}.${testDomain}
+
+	        UseCanonicalName off
+	        DocumentRoot /export/ksl/v2
+
+	        <Directory /export/ksl/v2>
+		                Options FollowSymLinks
+	                AllowOverride All
+	                Order allow,deny
+	                allow from all
+	                Require all granted
+	        </Directory>
+
+		        <IfModule mod_dir.c>
+		                DirectoryIndex index.php index.html index.xhtml index.htm
+	        </IfModule>
+
+		        ExpiresActive on
+	        ExpiresDefault "now plus 5 minutes"
+
+	        AddOutputFilterByType DEFLATE text/css application/x-javascript
+	        BrowserMatch "^" no-gzip
+	        BrowserMatch "\bGooglebot" !no-gzip
+	        BrowserMatch "\bFirefox.3" !no-gzip
+	        BrowserMatch "\bMSIE.7" !no-gzip
+	        BrowserMatch "\bMSIE.8" !no-gzip
+	        BrowserMatch "\bSafari.3" !no-gzip
+	        RewriteEngine on
+	        RewriteRule \/emedia\/(.*) /emedia/emedia.php [PT,E=media:$1,E=col:slc]
+	        Alias /emedia/ /var/local/scripts/
+	        RewriteRule ^\/deals/?(.*)$ /public/deal/todaysdeals/$1
+
+		# Zend Jobs
+	    RewriteRule ^\/jobs/listings$ /jobs/ [L,R=301]
+	    RewriteCond %{QUERY_STRING} ^nid=801$ [NC]
+	    RewriteRule ^\/index.php$ /jobs/? [L,R=301]
+
+	    RewriteRule ^\/jobs/css/(.*)$ /jobs/public/css/$1 [L]
+	    RewriteRule ^\/jobs/images/(.*)$ /jobs/public/images/$1 [L]
+	    RewriteRule ^\/jobs/js/(.*)$ /jobs/public/js/$1 [L]
+	    RewriteRule ^\/jobs/aux/(.*)$ /jobs/public/aux/$1 [L]
+	    RewriteRule ^\/jobs/?(.*)$ /jobs/public/index.php/$1 [L]
+
+	    #Dado jobs
+	    RewriteRule ^\/jobs/?(.*)$ /public/jobs/$1
+	    RewriteRule ^\/public/ksljobs/?(.*)$ /jobs/$1 [L,R=301]
+	    RewriteRule ^\/dqr/?$ /merchant/qrRedeem [QSA]
+
+	    # Zend Homes
+	    RewriteRule ^\/homes/css/(.*)$ /homes/public/css/$1 [L]
+	    RewriteRule ^\/homes/images/(.*)$ /homes/public/images/$1 [L]
+	    RewriteRule ^\/homes/js/(.*)$ /homes/public/js/$1 [L]
+	    RewriteRule ^\/homes/aux/(.*)$ /homes/public/aux/$1 [L]
+	    RewriteRule ^\/homes/(.*)$ /homes/public/index.php/$1 [L]
+
+
+	    # Zend Classifieds
+	    RewriteRule ^\/classifieds/css/(.*)$ /classifieds/public/css/$1 [L]
+	    RewriteRule ^\/classifieds/images/(.*)$ /classifieds/public/images/$1 [L]
+	    RewriteRule ^\/classifieds/js/(.*)$ /classifieds/public/js/$1 [L]
+	    RewriteRule ^\/classifieds/aux/(.*)$ /classifieds/public/aux/$1 [L]
+	    RewriteRule ^\/classifieds/(.*)$ /classifieds/public/index.php/$1 [L]
+
+	    # My Account
+	    RewriteRule ^\/myaccount/css/(.*)$ ${buildPath}/branch_m-ksl-myaccount_${myAccountBranch}/public/css/$1 [L]
+	    RewriteRule ^\/myaccount/images/(.*)$ ${buildPath}/branch_m-ksl-myaccount_${myAccountBranch}/public/images/$1 [L]
+	    RewriteRule ^\/myaccount/js/(.*)$ ${buildPath}/branch_m-ksl-myaccount_${myAccountBranch}/public/js/$1 [L]
+	    RewriteRule ^\/myaccount/aux/(.*)$ ${buildPath}/branch_m-ksl-myaccount_${myAccountBranch}/public/aux/$1 [L]
+	    RewriteRule ^\/myaccount/(.*)$ ${buildPath}/branch_m-ksl-myaccount_${myAccountBranch}/public/index.php/$1 [L]
+
+	    # KSL
+	    RewriteRule ^(.*)\.rev[0123456789]+\.(css|js|jpg|gif|png) $1.$2 [QSA]
+	    RewriteRule ^\/([0-9a-z]{6})$ http://www.ksl.com/redir.php?id=$1 [L]
+		    RewriteRule ^\/homes/([0-9]+)$ http://www.ksl.com/index.php?nid=475&ad=$1 [L]
+		    RewriteRule ^\/fly$ http://www.ksl.com/public/contest/listing/31 [L]
+		    RewriteRule ^\/healthbreak$ http://www.ksl.com/index.php?sid=10643683&nid=322 [L]
+		    RewriteRule ^\/symphony$ http://www.ksl.com/?sid=11665439&nid=322 [L]
+		    RewriteRule ^\/weatherchannel$ http://www.ksl.com/index.php?nid=656
+		    RewriteRule \/(.*)\/rss_(.*)\.xml$ /index.php [E=run:$1/rss.php,E=params:$2]
+	    RewriteRule \/(.*)xml\/(.*)\.(.*) /xml/index.php [E=path:$1,E=nid:$2,E=ext:$3]
+	    RewriteRule ^/(radio|2002)/(.*)\.(gif|jpg) http://web.ksl.com/$1/$2.$3 [L]
+	    RewriteCond %{REQUEST_URI} ^/(radio|TV|dmc_site|dump|phputil|ksl_radio|ksl_com|ksl_tv|ascer).*
+		    RewriteRule (.*) http://web.ksl.com$1 [L]
+	    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+	    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+	    RewriteRule ^\/public/(.*)$ /index.php [L,E=dado:public/$1]
+
+	    # Zend Cars
+	    RewriteRule ^\/auto/(css|images|js|aux)/(.*)$ ${buildPath}/branch_m-ksl-cars_${carsBranch}/public/$1/$2 [L]
+		RewriteRule ^\/(css|images|js|aux)/(.*)$ ${buildPath}/branch_m-ksl-cars_${carsBranch}/public/$1/$2 [L]
+	    RewriteRule ^\/auto/(.*)$ ${buildPath}/branch_m-ksl-cars_${carsBranch}/public/index.php/$1 [L]
+		RewriteRule ^\/(.*)$ ${buildPath}/branch_m-ksl-cars_${carsBranch}/public/index.php/$1 [L]
+
+	    php_flag display_errors 1
+	    php_flag log_errors 1
+	    #php_value error_log /var/log/apache2
+	    #php_value error_reporting 22519
+	    php_flag short_open_tag on
+	    php_flag register_globals on
+	    php_flag output_buffering on
+	    ErrorLog ${apacheLogDir}/${subdomain}.${testDomain}.error.log
+	    CustomLog ${apacheLogDir}/${subdomain}.${testDomain}.access.log combined
+
+	    php_admin_value auto_prepend_file "/var/www/xhgui/external/header.php"
+
+	</VirtualHost>
+		<VirtualHost *:443>
+		        ServerAdmin webmaster@localhost
+	        ServerName ${subdomain}.${testDomain}
+
+	        UseCanonicalName off
+	        DocumentRoot /export/ksl/v2 
+
+	        <Directory /export/ksl/v2>
+		                Options FollowSymLinks
+	                AllowOverride All
+	                Order allow,deny
+	                allow from all
+	                Require all granted
+	        </Directory>
+
+		        <IfModule mod_dir.c>
+		                DirectoryIndex index.php index.html index.xhtml index.htm
+	        </IfModule>
+
+		        ExpiresActive on
+	        ExpiresDefault "now plus 5 minutes"
+
+	        AddOutputFilterByType DEFLATE text/css application/x-javascript
+	        BrowserMatch "^" no-gzip
+	        BrowserMatch "\bGooglebot" !no-gzip
+	        BrowserMatch "\bFirefox.3" !no-gzip
+	        BrowserMatch "\bMSIE.7" !no-gzip
+	        BrowserMatch "\bMSIE.8" !no-gzip
+	        BrowserMatch "\bSafari.3" !no-gzip
+	        RewriteEngine on
+	        RewriteRule \/emedia\/(.*) /emedia/emedia.php [PT,E=media:$1,E=col:slc]
+	        Alias /emedia/ /var/local/scripts/
+	        RewriteRule ^\/deals/?(.*)$ /public/deal/todaysdeals/$1
+
+	# Zend Jobs
+	    RewriteRule ^\/jobs/listings$ /jobs/ [L,R=301]
+	    RewriteCond %{QUERY_STRING} ^nid=801$ [NC]
+	    RewriteRule ^\/index.php$ /jobs/? [L,R=301]
+
+	    RewriteRule ^\/jobs/css/(.*)$ /jobs/public/css/$1 [L]
+	    RewriteRule ^\/jobs/images/(.*)$ /jobs/public/images/$1 [L]
+	    RewriteRule ^\/jobs/js/(.*)$ /jobs/public/js/$1 [L]
+	    RewriteRule ^\/jobs/aux/(.*)$ /jobs/public/aux/$1 [L]
+	    RewriteRule ^\/jobs/?(.*)$ /jobs/public/index.php/$1 [L]
+
+	    #Dado jobs
+	    RewriteRule ^\/jobs/?(.*)$ /public/jobs/$1
+	    RewriteRule ^\/public/ksljobs/?(.*)$ /jobs/$1 [L,R=301]
+	    RewriteRule ^\/dqr/?$ /merchant/qrRedeem [QSA]
+
+	    # Zend Homes
+	    RewriteRule ^\/homes/css/(.*)$ /homes/public/css/$1 [L]
+	    RewriteRule ^\/homes/images/(.*)$ /homes/public/images/$1 [L]
+	    RewriteRule ^\/homes/js/(.*)$ /homes/public/js/$1 [L]
+	    RewriteRule ^\/homes/aux/(.*)$ /homes/public/aux/$1 [L]
+	    RewriteRule ^\/homes/(.*)$ /homes/public/index.php/$1 [L]
+
+	    # My Account
+	    RewriteRule ^\/myaccount/css/(.*)$ ${buildPath}/branch_m-ksl-myaccount_${myAccountBranch}/public/css/$1 [L]
+	    RewriteRule ^\/myaccount/images/(.*)$ ${buildPath}/branch_m-ksl-myaccount_${myAccountBranch}/public/images/$1 [L]
+	    RewriteRule ^\/myaccount/js/(.*)$ ${buildPath}/branch_m-ksl-myaccount_${myAccountBranch}/public/js/$1 [L]
+	    RewriteRule ^\/myaccount/aux/(.*)$ ${buildPath}/branch_m-ksl-myaccount_${myAccountBranch}/public/aux/$1 [L]
+	    RewriteRule ^\/myaccount/(.*)$ ${buildPath}/branch_m-ksl-myaccount_${myAccountBranch}/public/index.php/$1 [L]
+
+
+	    # KSL
+	    RewriteRule ^(.*)\.rev[0123456789]+\.(css|js|jpg|gif|png) $1.$2 [QSA]
+	    RewriteRule ^\/([0-9a-z]{6})$ http://www.ksl.com/redir.php?id=$1 [L]
+		    RewriteRule ^\/homes/([0-9]+)$ http://www.ksl.com/index.php?nid=475&ad=$1 [L]
+		    RewriteRule ^\/fly$ http://www.ksl.com/public/contest/listing/31 [L]
+		    RewriteRule ^\/healthbreak$ http://www.ksl.com/index.php?sid=10643683&nid=322 [L]
+		    RewriteRule ^\/symphony$ http://www.ksl.com/?sid=11665439&nid=322 [L]
+		    RewriteRule ^\/weatherchannel$ http://www.ksl.com/index.php?nid=656
+		    RewriteRule \/(.*)\/rss_(.*)\.xml$ /index.php [E=run:$1/rss.php,E=params:$2]
+	    RewriteRule \/(.*)xml\/(.*)\.(.*) /xml/index.php [E=path:$1,E=nid:$2,E=ext:$3]
+	    RewriteRule ^/(radio|2002)/(.*)\.(gif|jpg) http://web.ksl.com/$1/$2.$3 [L]
+	    RewriteCond %{REQUEST_URI} ^/(radio|TV|dmc_site|dump|phputil|ksl_radio|ksl_com|ksl_tv|ascer).*
+		    RewriteRule (.*) http://web.ksl.com$1 [L]
+	    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+	    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+	    RewriteRule ^\/public/(.*)$ /index.php [L,E=dado:public/$1]
+
+	    # Zend Cars
+	    RewriteRule ^\/auto/(css|images|js|aux)/(.*)$ ${buildPath}/branch_m-ksl-cars_${carsBranch}/public/$1/$2 [L]
+		RewriteRule ^\/(css|images|js|aux)/(.*)$ ${buildPath}/branch_m-ksl-cars_${carsBranch}/public/$1/$2 [L]
+	    RewriteRule ^\/auto/(.*)$ ${buildPath}/branch_m-ksl-cars_${carsBranch}/public/index.php/$1 [L]
+		RewriteRule ^\/(.*)$ ${buildPath}/branch_m-ksl-cars_${carsBranch}/public/index.php/$1 [L]
+
+	        php_flag display_errors 1
+	        php_flag log_errors 1
+	        #php_value error_log /var/log/apache2
+	        #php_value error_reporting 22519
+	        php_flag short_open_tag on
+	        php_flag register_globals on
+	        php_flag output_buffering on
+	        ErrorLog ${apacheLogDir}/${subdomain}.${testDomain}.error.log
+	        CustomLog ${apacheLogDir}/${subdomain}.${testDomain}.access.log combined
+
+	        SSLEngine on
+	        SSLOptions +StrictRequire
+
+	        # Support only for strong cryptography
+	        SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS
+
+	        SSLCertificateFile /etc/apache2/cert/wildcard.ksl.com.crt
+	        SSLCertificateKeyFile /etc/apache2/cert/wildcard.ksl.com.key
+	        SSLCertificateChainFile /etc/apache2/cert/gd-bundle.crt
+
+	        php_admin_value auto_prepend_file "/var/www/xhgui/external/header.php"
+	</VirtualHost>
+		`;
 }
