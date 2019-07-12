@@ -1,44 +1,84 @@
+const { getWhitelist, getSubdomainsFromBranchNames } = require('./lib/getWhitelist');
 module.exports = {
     projects: [
         {
             owner: 'deseretdigital',
-            repo: 'hive-api',
-            user: 'XXXXX',
-            token: 'XXXXX',
+            repo: 'ksl-api',
+            user: 'sdickson',
+            token: 'ef94fedee23148c1e0ce7d3554ec2724d52fbf9a',
             build: [
                 {
+                    proc: 'rm',
+                    args: ['composer.lock'],
+		    proceedOnFailure: true
+                },
+                {
                     proc: 'composer',
-                    args: ['install', '-q', '--working-dir=application/'],
-                    env: { SYMFONY_ENV: 'stage' }
+                    args: ['install', '-q'],
+		    proceedOnFailure: true
                 },
-                {
-                    proc: 'chmod',
-                    args: ['-R', 'a+rwx', 'application/app/cache']
+		{
+                    proc: 'ln',
+                    args: ['-nfs', '/usr/local/framework/DDM', 'library/DDM'],
+                    proceedOnFailure: true
                 },
-                {
-                    proc: 'chmod',
-                    args: ['-R', 'a+rwx', 'application/app/logs']
+		{
+                    proc: 'ln',
+                    args: ['-nfs', '/export/ksl/v2', 'library/ksl'],
+                    proceedOnFailure: true
+                },
+		{
+                    proc: 'ln',
+                    args: ['-nfs', '/usr/local/framework/zend/library/Zend', 'library/Zend'],
+                    proceedOnFailure: true
+                },
+		{
+                    proc: 'ln',
+                    args: ['-nfs', '/usr/local/framework', 'framework'],
+                    proceedOnFailure: true
                 }
             ],
             webhook: ''
         },
         {
             owner: 'deseretdigital',
-            repo: 'hive-ui',
-            user: 'XXXXX',
-            token: 'XXXXX',
+            repo: 'm-ksl-cars',
+            user: 'sdickson',
+            token: 'ef94fedee23148c1e0ce7d3554ec2724d52fbf9a',
             build: [
                 {
-                    proc: 'yarn',
-                    args: ['install']
+                    proc: 'sudo',
+                    args: ['npm', 'install'],
+                    proceedOnFailure: true
                 },
                 {
-                    proc: 'yarn',
-                    args: ['build']
+                    proc: 'sudo',
+                    args: ['npm', 'run', 'prod'],
+                    proceedOnFailure: true
+                },
+		{
+                    proc: 'rm',
+                    args: ['composer.lock'],
+                    proceedOnFailure: true
                 },
                 {
-                    proc: 'gulp',
-                    args: ['build']
+                    proc: 'composer',
+                    args: ['install', '-q'],
+                    proceedOnFailure: true
+                }
+            ],
+            webhook: ''
+        },
+        {
+            owner: 'deseretdigital',
+            repo: 'm-ksl-myaccount',
+            user: 'sdickson',
+            token: 'ef94fedee23148c1e0ce7d3554ec2724d52fbf9a',
+            build: [
+                {
+                    proc: 'sudo',
+                    args: ['npm', 'run', 'brancher'],
+                    proceedOnFailure: true
                 }
             ],
             webhook: ''
@@ -46,14 +86,30 @@ module.exports = {
     ],
     postBuildProcess: [
       {
-        proc: 'apachectl',
-        args: ['restart']
+        proc: 'apache2ctl',
+        args: ['graceful'],
+                    proceedOnFailure: true
+      },
+      {
+        proc: '/var/dynamic/cars-branches/branch_ksl-api_master/public_html/classifieds/common/scripts/create-constants.sh',
+        args: [
+          '-s',
+          function({ anyBranchesUpdated }) {
+            if (anyBranchesUpdated) {
+              return getSubdomainsFromBranchNames(getWhitelist().map(({branch}) => branch)).join(',');
+            }
+            return '';
+	  },
+          '-d',
+          'cars.test.ksl.com'
+        ],
+        proceedOnFailure: true
       }
     ],
     apacheConfigDir: '/etc/apache2/sites-dynamic',
-    buildPath: `/var/dynamic/hive-branches`,
-    stageDomain: 'stage.hive.pub',
-    testDomain: 'test.hive.pub',
+    buildPath: `/var/dynamic/cars-branches`,
+    stageDomain: 'stage-v2.ksl.com',
+    testDomain: 'cars.test.ksl.com',
     stageDocRoot: '',
     apacheLogDir: '/var/log/apache2'
 };
