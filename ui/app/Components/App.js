@@ -22,8 +22,17 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    this.props.loadWhitelist();
+    this.loadWhitelist();
+    this.whitelistPolling = setInterval(this.loadWhitelist.bind(this), 5000);
     this.props.loadBranches();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.whitelistPolling);
+  }
+
+  loadWhitelist() {
+    this.props.loadWhitelist();
   }
 
   handleDeleteSubdomain(subdomainInfo) {
@@ -51,8 +60,8 @@ export default class App extends Component {
       alert('Please enter a user name');
       return;
     }
-    if(!/^[a-zA-Z0-9_\-]+$/.test(this.state.subdomain)) {
-      alert('Subdomain must contain letters, numbers, underscores, or dashes only');
+    if(!/^[a-zA-Z0-9]+$/.test(this.state.subdomain)) {
+      alert('Subdomain must contain letters and numbers only');
       return;
     }
     if(!/^[a-zA-Z\-]+$/.test(this.state.user)) {
