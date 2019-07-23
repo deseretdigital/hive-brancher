@@ -5,12 +5,12 @@
   "author": "Matt Montgomery <mmontgomery@deseretdigital.com>",
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^3.4.6",
+    "bluebird": "^3.5.5",
     "dotenv": "^2.0.0",
-    "github-api": "^2.3.0",
+    "github-api": "^3.2.2",
     "lodash": "^4.17.11",
-    "node-fetch": "^2.2.0",
+    "node-fetch": "^2.6.0",
     "remove": "^0.1.5",
-    "simple-git": "^1.65.0"
+    "simple-git": "^1.122.0"
   }
 }
