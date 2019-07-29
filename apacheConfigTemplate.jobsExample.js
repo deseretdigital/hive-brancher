@@ -18,8 +18,6 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
       ServerName ${subdomain}.api.${testDomain}
 
       DocumentRoot "${buildPath}/branch_ksl-api_${apiBranch}/public_html"
-      
-      Alias /classifieds/jobs ${buildPath}/branch_m-ksl-jobs_${jobsBranch}/site-api
 
       <Directory "${buildPath}/branch_ksl-api_${apiBranch}/public_html">
         AllowOverride All
@@ -43,8 +41,6 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
       ServerName ${subdomain}.api.${testDomain}
 
       DocumentRoot "${buildPath}/branch_ksl-api_${apiBranch}/public_html"
-      
-      Alias /classifieds/jobs ${buildPath}/branch_m-ksl-jobs_${jobsBranch}/site-api
 
       <Directory "${buildPath}/branch_ksl-api_${apiBranch}/public_html">
         AllowOverride All
