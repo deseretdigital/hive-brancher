@@ -26,6 +26,8 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
         Require all granted
       </Directory>
 
+      RewriteRule ^/classifieds/jobs(.*)$ ${buildPath}/branch_m-ksl-jobs_${apiBranch}/site-api/index.php/$1 [L]
+
       php_value display_errors Off
       php_value error_reporting 22519
       php_flag short_open_tag on
@@ -46,6 +48,8 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
         allow from all
         Require all granted
       </Directory>
+
+      RewriteRule ^/classifieds/jobs(.*)$ ${buildPath}/branch_m-ksl-jobs_${apiBranch}/site-api/index.php/$1 [L]
 
       php_value display_errors Off
       php_value error_reporting 22519
