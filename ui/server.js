@@ -26,6 +26,7 @@ app.get('/branches', (req, res, next) => {
       .map((project) => getBranches(project, null, null, buildPath, false), { concurrency: 1 })
       .then((repoList) => {
         const allBranches = [];
+        console.log(repoList.ignoreBranches);
         if(!repoList.ignoreBranches) {
           repoList.forEach(repo => {
             repo.branches.forEach(branch => {
