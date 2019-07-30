@@ -24,15 +24,10 @@ app.post('/save-whitelist', (req, res, next) => {
 app.get('/branches', (req, res, next) => {
   Promise.resolve(projects)
       .map((project) => getBranches(project, null, null, buildPath, false), { concurrency: 1 })
-      .filter((repoList) => {
-        console.log({
-          isIgnoreBranches: !!repoList.ignoreBranches
-        });
-        return !!repoList.ignoreBranches;
-      })
       .then((repoList) => {
         const allBranches = [];
         repoList.forEach(repo => {
+          console.log(repo);
           repo.branches.forEach(branch => {
             if(branch.name !== 'master' && allBranches.indexOf(branch.name) === -1) {
               allBranches.push(branch.name);
