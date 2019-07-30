@@ -47,7 +47,7 @@ module.exports = {
       build: [
         {
           proc: 'sudo',
-          args: ['npm', 'run', 'init'],
+          args: ['npm', 'run', 'brancher'],
           proceedOnFailure: true
         },
         {
