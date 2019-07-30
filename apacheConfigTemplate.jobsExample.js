@@ -128,7 +128,6 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
 
       # KSL
       RewriteRule ^(.*)\.rev[0123456789]+\.(css|js|jpg|gif|png) $1.$2 [QSA]
-      RewriteRule ^\/([0-9a-z]{6})$ http://www.ksl.com/redir.php?id=$1 [L]
       RewriteRule ^\/homes/([0-9]+)$ http://www.ksl.com/index.php?nid=475&ad=$1 [L]
       RewriteRule ^\/fly$ http://www.ksl.com/public/contest/listing/31 [L]
       RewriteRule ^\/healthbreak$ http://www.ksl.com/index.php?sid=10643683&nid=322 [L]
