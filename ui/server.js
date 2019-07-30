@@ -26,7 +26,7 @@ app.get('/branches', (req, res, next) => {
       // Get the branches for each project, but skip ones we indicate
       .reduce(
         (acc, project) => {
-          if(project.ignoreBranches) {
+          if(!project.ignoreBranches) {
             acc.push(getBranches(project, null, null, buildPath, false));
           }
           return acc;
