@@ -8,6 +8,17 @@ can be tested against.
 - Multi-repository
 - Webhook on branch post-build
 
+## Script
+
+You will need to create some files for brancher to work correctly.  Examples are provided.  
+- config.js - tells brancher which repos to care about, post build scripts, etc.
+- apacheConfig.js - tells brancher how to make the dynamic apache config files 
+- whitelist.json - tells the UI which branches to care about - and therefore which branchers brancher should look for
+- .env - A place for a personal_github_token so that brancher has access to the repos
+
+Also make sure your brancher.sh file has executable permissions.  Many teams run this as well as the cleanup.js once every minute.  
+
+
 ## UI
 - Run "node server.js" (in the ui directory) to run an express server on port 3000 or pass in a custom port like this "node server.js 8000"
 - The UI is a simple form that lists out the contents of whitelist.json and allows editing
