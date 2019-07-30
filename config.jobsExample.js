@@ -1,10 +1,9 @@
-const { getWhitelist, getSubdomainsFromBranchNames } = require('./lib/getWhitelist');
 module.exports = {
   projects: [
     {
       owner: 'deseretdigital',
       repo: 'ksl-api',
-      user: 'sdickson',
+      user: '',
       token: 'xxxx',
       build: [
         {
@@ -48,22 +47,12 @@ module.exports = {
       build: [
         {
           proc: 'sudo',
-          args: ['npm', 'install'],
-          proceedOnFailure: true
-        },
-        {
-          proc: 'sudo',
-          args: ['npm', 'run', 'prod'],
+          args: ['npm', 'run', 'init'],
           proceedOnFailure: true
         },
         {
           proc: 'rm',
-          args: ['composer.lock'],
-          proceedOnFailure: true
-        },
-        {
-          proc: 'composer',
-          args: ['install', '-q'],
+          args: ['composer.lock', 'package.lock'],
           proceedOnFailure: true
         }
       ],
@@ -90,23 +79,6 @@ module.exports = {
       args: ['graceful'],
       proceedOnFailure: true
     },
-    /*
-    {
-      proc: '/var/dynamic/jobs-branches/branch_ksl-api_master/public_html/classifieds/common/scripts/create-constants.sh',
-      args: [
-        '-s',
-        function ({ anyBranchesUpdated }) {
-          if (anyBranchesUpdated) {
-            return getSubdomainsFromBranchNames(getWhitelist().map(({ branch }) => branch)).join(',');
-          }
-          return '';
-        },
-        '-d',
-        'jobs.test.ksl.com'
-      ],
-      proceedOnFailure: true
-    }
-    */
   ],
   apacheConfigDir: '/etc/apache2/sites-dynamic',
   buildPath: `/var/dynamic/jobs-branches`,
