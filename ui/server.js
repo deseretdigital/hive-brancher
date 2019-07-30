@@ -26,14 +26,15 @@ app.get('/branches', (req, res, next) => {
       .map((project) => getBranches(project, null, null, buildPath, false), { concurrency: 1 })
       .then((repoList) => {
         const allBranches = [];
-        repoList.forEach(repo => {
-          console.log(repo);
-          repo.branches.forEach(branch => {
-            if(branch.name !== 'master' && allBranches.indexOf(branch.name) === -1) {
-              allBranches.push(branch.name);
-            }
+        if(!repoList.ignoreBranches) {
+          repoList.forEach(repo => {
+            repo.branches.forEach(branch => {
+              if(branch.name !== 'master' && allBranches.indexOf(branch.name) === -1) {
+                allBranches.push(branch.name);
+              }
+            });
           });
-        });
+        }
         allBranches.sort();
         res.send(allBranches);
         next();
