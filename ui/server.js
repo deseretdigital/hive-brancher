@@ -24,15 +24,8 @@ app.post('/save-whitelist', (req, res, next) => {
 app.get('/branches', (req, res, next) => {
   Promise.resolve(projects)
       // Get the branches for each project, but skip ones we indicate
-      .reduce(
-        (acc, project) => {
-          if(!project.ignoreBranches) {
-            acc.push(getBranches(project, null, null, buildPath, false));
-          }
-          return acc;
-        },
-        []
-      )
+      .map((project) => getBranches(project, null, null, buildPath, false), { concurrency: 1 })
+      .filter((project) => !project.ignoreBranches)
       .then((repoList) => {
         const allBranches = [];
         repoList.forEach(repo => {
