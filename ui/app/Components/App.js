@@ -105,7 +105,7 @@ export default class App extends Component {
           <label>
             Branch name
             {branches.length === 0 ? (
-              <span>{' '}Fetching branches from git...</span>
+              <span className="loadingPlaceholder">{' '}Fetching branches from git...</span>
             ) : (
               <select onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} >
                 {branches.map(branch => (
