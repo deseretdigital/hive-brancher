@@ -26,9 +26,9 @@ app.get('/branches', (req, res, next) => {
       .map((project) => getBranches(project, null, null, buildPath, false), { concurrency: 1 })
       .filter((repoList) => {
         console.log({
-          isIgnoreBranches: !repoList.ignoreBranches
+          isIgnoreBranches: repoList.ignoreBranches
         });
-        return !repoList.ignoreBranches;
+        return repoList.ignoreBranches;
       })
       .then((repoList) => {
         const allBranches = [];
