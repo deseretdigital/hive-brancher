@@ -5,6 +5,7 @@ module.exports = {
       repo: 'ksl-api',
       user: '',
       token: 'xxxx',
+      ignoreBranches: true,
       build: [
         {
           proc: 'rm',
