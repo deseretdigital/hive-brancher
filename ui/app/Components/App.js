@@ -112,13 +112,13 @@ export default class App extends Component {
               <span className="loadingPlaceholder">{' '}Fetching branches from git...</span>
             ) : (
               <select onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} >
-                Object.keys(branches).map(repo => (
+                {Object.keys(branches).map(repo => (
                   <optgroup key={branches[repo]} label={branches[repo]}>
                   {branches[repo].map(branch => (
                     <option key={branch} value={branch}>{branch}</option>
                   ))}
                   </optgroup>
-                ))
+                ))}
               </select>
             )}
           </label>
