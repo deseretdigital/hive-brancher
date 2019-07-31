@@ -113,8 +113,8 @@ export default class App extends Component {
             ) : (
               <select onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} >
                 Object.keys(branches).map(repo => (
-                  <optgroup key={repo} label={repo}>
-                  {repo.branches.map(branch => (
+                  <optgroup key={branches[repo]} label={branches[repo]}>
+                  {branches[repo].map(branch => (
                     <option key={branch} value={branch}>{branch}</option>
                   ))}
                   </optgroup>
