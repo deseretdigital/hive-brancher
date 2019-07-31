@@ -83,10 +83,6 @@ export default class App extends Component {
 
   render() {
     const { branches, whitelist } = this.props;
-    console.log({
-      branches,
-      ObjectKeysBranches: Object.keys(branches)
-    });
     return (
       <div className="app">
         <h1>Current Subdomains</h1>
@@ -113,7 +109,7 @@ export default class App extends Component {
             ) : (
               <select onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} >
                 {Object.keys(branches).map(repo => (
-                  <optgroup key={branches[repo]} label={branches[repo]}>
+                  <optgroup key={repo} label={repo}>
                   {branches[repo].map(branch => (
                     <option key={branch} value={branch}>{branch}</option>
                   ))}
