@@ -1,6 +1,6 @@
 import Constants from './../AppConstants';
 import createReducer from './createReducer';
-const initialState = [];
+const initialState = {};
 
 const actionHandlers = {
     [Constants.SET_BRANCHES]: (_, { payload }) => payload

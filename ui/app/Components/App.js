@@ -83,6 +83,10 @@ export default class App extends Component {
 
   render() {
     const { branches, whitelist } = this.props;
+    console.log({
+      branches,
+      ObjectKeysBranches: Object.keys(branches)
+    });
     return (
       <div className="app">
         <h1>Current Subdomains</h1>
