@@ -6,14 +6,14 @@ import Constants from 'AppConstants';
 
 export default function* loadBranchesSaga() {
   let tries = 0;
-  let branches = [];
+  let branches = {};
   do {
     yield call(delay, 1000);
     try {
       branches = yield call(fetchBranches);
     } catch(err) {}
     tries++;
-  } while (branches.length === 0 && tries < 10);
+  } while (Object.keys(branches).length === 0 && tries < 10);
   yield put({ type: Constants.SET_BRANCHES, payload: branches });
 }
 
