@@ -6,14 +6,6 @@ import './Style/App.scss';
 
 const ignore = ['master'];
 
-function getInitialState() {
-  return {
-    subdomain: '',
-    branch: '',
-    user: ''
-  };
-}
-
 export default class App extends Component {
 
   static propTypes = {
@@ -23,7 +15,11 @@ export default class App extends Component {
     whitelist: PropTypes.arrayOf(PropTypes.shape({})).isRequired
   };
 
-  state = getInitialState();
+  state = {
+    subdomain: '',
+    branch: '',
+    user: ''
+  };
 
   componentWillMount() {
     this.loadWhitelist();
@@ -52,50 +48,45 @@ export default class App extends Component {
     const { whitelist, saveWhitelist } = this.props;
     let currentDate = new Date();
 
-    if(!this.state.branch) {
+    if (!this.state.branch) {
       alert('Please enter a branch');
       return;
     }
-    if(!this.state.subdomain) {
+    if (!this.state.subdomain) {
       alert('Please enter a subdomain');
       return;
     }
-    if(!this.state.user) {
+    if (!this.state.user) {
       alert('Please enter a user name');
       return;
     }
-    if(!/^[a-zA-Z0-9]+$/.test(this.state.subdomain)) {
+    if (!/^[a-zA-Z0-9]+$/.test(this.state.subdomain)) {
       alert('Subdomain must contain letters and numbers only');
       return;
     }
-    if(!/^[a-zA-Z\-]+$/.test(this.state.user)) {
+    if (!/^[a-zA-Z\-]+$/.test(this.state.user)) {
       alert('User name must contain only letters');
       return;
     }
 
-    for(let i=0;i<this.props.whitelist.length;i++) {
+    for (let i = 0; i < this.props.whitelist.length; i++) {
       const wl = this.props.whitelist[i];
-      if(wl.subdomain === this.state.subdomain) {
+      if (wl.subdomain === this.state.subdomain) {
         alert(`${wl.subdomain} subdomain is already in use.`);
         return;
       }
     }
 
-    if(this.state.subdomain === 'master' || this.state.branch === 'master') {
+    if (this.state.subdomain === 'master' || this.state.branch === 'master') {
       alert('Master is a reserved branch and subdomain that cannot be used');
       return;
     }
 
 
-    new Promise(resolve => {
-      resolve();
-      saveWhitelist([
-        ...whitelist,
-        { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString() }
-      ]);
-    });
-
-    this.setState(getInitialState());
+    saveWhitelist([
+      ...whitelist,
+      { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString() }
+    ]);
   }
 
   render() {
@@ -108,7 +99,7 @@ export default class App extends Component {
             <li>
               <span>{item.subdomain} ({item.branch}) Created by {item.user} on {item.created}</span>
               <button className="delete" onClick={() => this.handleDeleteSubdomain(item)}>Delete</button>
-          </li>
+            </li>
           ))}
         </ul>
         <hr />
@@ -124,16 +115,16 @@ export default class App extends Component {
             {Object.keys(branches).length === 0 ? (
               <span className="loadingPlaceholder">{' '}Fetching branches from git...</span>
             ) : (
-              <select onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} >
-                {Object.keys(branches).map(repo => (
-                  <optgroup key={repo} label={repo}>
-                  {branches[repo].map(branch => (
-                    <option key={branch} value={branch}>{branch}</option>
+                <select onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} >
+                  {Object.keys(branches).map(repo => (
+                    <optgroup key={repo} label={repo}>
+                      {branches[repo].map(branch => (
+                        <option key={branch} value={branch}>{branch}</option>
+                      ))}
+                    </optgroup>
                   ))}
-                  </optgroup>
-                ))}
-              </select>
-            )}
+                </select>
+              )}
           </label>
           <label>
             User
