@@ -87,10 +87,13 @@ export default class App extends Component {
     }
 
 
-    saveWhitelist([
-      ...whitelist,
-      { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString() }
-    ]);
+    new Promise(resolve => {
+      resolve();
+      saveWhitelist([
+        ...whitelist,
+        { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString() }
+      ]);
+    });
 
     this.setState(getInitialState());
   }
