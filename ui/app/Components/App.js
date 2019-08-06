@@ -6,6 +6,14 @@ import './Style/App.scss';
 
 const ignore = ['master'];
 
+function getInitialState() {
+  return {
+    subdomain: '',
+    branch: '',
+    user: ''
+  };
+}
+
 export default class App extends Component {
 
   static propTypes = {
@@ -15,11 +23,7 @@ export default class App extends Component {
     whitelist: PropTypes.arrayOf(PropTypes.shape({})).isRequired
   };
 
-  state = {
-    subdomain: '',
-    branch: '',
-    user: ''
-  };
+  state = getInitialState();
 
   componentWillMount() {
     this.loadWhitelist();
@@ -82,11 +86,15 @@ export default class App extends Component {
       return;
     }
 
+    new Promise(resolve => {
+      saveWhitelist([
+        ...whitelist,
+        { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString() }
+      ]);
+      resolve();
+    });
 
-    saveWhitelist([
-      ...whitelist,
-      { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString() }
-    ]);
+    this.setState(getInitialState());
   }
 
   render() {
@@ -116,6 +124,7 @@ export default class App extends Component {
               <span className="loadingPlaceholder">{' '}Fetching branches from git...</span>
             ) : (
                 <select onChange={(ev) => this.setState({ branch: ev.target.value })} type="text" value={this.state.branch} >
+                  <option />
                   {Object.keys(branches).map(repo => (
                     <optgroup key={repo} label={repo}>
                       {branches[repo].map(branch => (
