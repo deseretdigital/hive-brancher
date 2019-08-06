@@ -108,7 +108,7 @@ export default class App extends Component {
         <div className="form">
           <label>
             Subdomain name
-            <input onChange={(ev) => this.setState({ subdomain: ev.target.value })} type="text" value={this.state.subdomain} autoFocus />
+            <input onChange={(ev) => this.setState({ subdomain: ev.target.value })} type="text" value={this.state.subdomain} autoFocus={true} />
           </label>
           <label>
             Branch name
