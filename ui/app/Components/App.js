@@ -69,6 +69,13 @@ export default class App extends Component {
       return;
     }
 
+    this.props.whitelist.forEach(wl => {
+      if(wl.subdomain === this.state.subdomain) {
+        alert(`${wl.subdomain} subdomain is already in use.`);
+        return;
+      }
+    });
+
     if(this.state.subdomain === 'master' || this.state.branch === 'master') {
       alert('Master is a reserved branch and subdomain that cannot be used');
       return;
