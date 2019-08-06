@@ -6,6 +6,14 @@ import './Style/App.scss';
 
 const ignore = ['master'];
 
+function getInitialState() {
+  return {
+    subdomain: '',
+    branch: '',
+    user: ''
+  };
+}
+
 export default class App extends Component {
 
   static propTypes = {
@@ -15,11 +23,7 @@ export default class App extends Component {
     whitelist: PropTypes.arrayOf(PropTypes.shape({})).isRequired
   };
 
-  state = {
-    subdomain: '',
-    branch: '',
-    user: ''
-  }
+  state = getInitialState();
 
   componentWillMount() {
     this.loadWhitelist();
@@ -86,7 +90,9 @@ export default class App extends Component {
     saveWhitelist([
       ...whitelist,
       { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString() }
-    ])
+    ]);
+
+    this.setState(getInitialState());
   }
 
   render() {
