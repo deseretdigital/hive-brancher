@@ -78,7 +78,7 @@ export default class App extends Component {
       return;
     }
 
-    if(this.state.subdomain === 'brancher') {
+    if (this.state.subdomain === 'brancher') {
       alert('brancher subdomain is reserved for this tool.');
       return;
     }
@@ -88,6 +88,9 @@ export default class App extends Component {
       if (wl.subdomain === this.state.subdomain) {
         alert(`${wl.subdomain} subdomain is already in use.`);
         return;
+      }
+      if(wl.branch !== 'master' && wl.branch === this.state.branch) {
+        alert(`${wl.branch} is already being used. Visit https://${wl.subdomain}.jobs.test.ksl.com`);
       }
     }
 
@@ -102,18 +105,38 @@ export default class App extends Component {
     this.setState(getInitialState());
   }
 
+  copyToClipboard(branchName) {
+    const tmpInput = document.createElement('input');
+    tmpInput.value = branchName;
+    tmpInput.type = 'text';
+    tmpInput.style.position = 'absolute';
+    tmpInput.style.left = '9000vw';
+    document.body.appendChild(tmpInput);
+    tmpInput.select();
+    document.execCommand('copy');
+    alert('Copied subdomain url to clipboard!');
+    document.body.removeChild(tmpInput);
+  }
+
   render() {
     const { branches, whitelist } = this.props;
     return (
       <div className="app">
         <h1>Current Subdomains</h1>
         <ul>
-          {whitelist.filter(item => ignore.indexOf(item.branch) === -1).map(item => (
-            <li>
-              <span>{item.subdomain} ({item.branch}) Created by {item.user} on {item.created}</span>
-              <button className="delete" onClick={() => this.handleDeleteSubdomain(item)}>Delete</button>
-            </li>
-          ))}
+          {whitelist.filter(item => ignore.indexOf(item.branch) === -1).map(item => {
+            const subdomainUrl = `https://${item.subdomain}.jobs.test.ksl.com`;
+            return (
+              <li>
+                <a
+                  href={subdomainUrl}
+                  target="_blank"
+                >{item.subdomain} ({item.branch}) Created by {item.user} on {item.created}</a>
+                <button onClick={() => this.copyToClipboard(subdomainUrl)}>Copy Url to Clipboard</button>
+                <button className="delete" onClick={() => this.handleDeleteSubdomain(item)}>Delete</button>
+              </li>
+            );
+          })}
         </ul>
         <hr />
         <h1>New Subdomain</h1>
