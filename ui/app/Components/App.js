@@ -73,17 +73,22 @@ export default class App extends Component {
       return;
     }
 
+    if (this.state.subdomain === 'master' || this.state.branch === 'master') {
+      alert('Master is a reserved branch and subdomain that cannot be used');
+      return;
+    }
+
+    if(this.state.subdomain === 'brancher') {
+      alert('brancher subdomain is already in use.');
+      return;
+    }
+
     for (let i = 0; i < this.props.whitelist.length; i++) {
       const wl = this.props.whitelist[i];
       if (wl.subdomain === this.state.subdomain) {
         alert(`${wl.subdomain} subdomain is already in use.`);
         return;
       }
-    }
-
-    if (this.state.subdomain === 'master' || this.state.branch === 'master') {
-      alert('Master is a reserved branch and subdomain that cannot be used');
-      return;
     }
 
     new Promise(resolve => {
