@@ -132,7 +132,7 @@ export default class App extends Component {
                   href={subdomainUrl}
                   target="_blank"
                 >{item.subdomain} ({item.branch}) Created by {item.user} on {item.created}</a>
-                <div>
+                <div className="buttonSeperator">
                   <button className="save" onClick={() => this.copyToClipboard(subdomainUrl)}>Copy Url</button>
                   <button className="delete" onClick={() => this.handleDeleteSubdomain(item)}>Delete</button>
                 </div>
