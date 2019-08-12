@@ -7,3 +7,5 @@ config.js
 apacheConfigTemplate.js
 whitelist.json
 .idea
+npm-debug.log
+ui/v8-compile-cache-0/
