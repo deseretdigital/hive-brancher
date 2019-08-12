@@ -79,7 +79,7 @@ export default class App extends Component {
     }
 
     if(this.state.subdomain === 'brancher') {
-      alert('brancher subdomain is already in use.');
+      alert('brancher subdomain is reserved for this tool.');
       return;
     }
 
