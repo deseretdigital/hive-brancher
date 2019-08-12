@@ -91,6 +91,7 @@ export default class App extends Component {
       }
       if(wl.branch !== 'master' && wl.branch === this.state.branch) {
         alert(`${wl.branch} is already being used. Visit https://${wl.subdomain}.jobs.test.ksl.com`);
+        return;
       }
     }
 
