@@ -12,14 +12,14 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
 
   const jobsBranch = repos.some(obj => obj.repo === 'm-ksl-jobs') ? branchName : 'master';
   const myAccountBranch = repos.some(obj => obj.repo === 'm-ksl-myaccount') ? branchName : 'master';
-  // const apiBranch = repos.some(obj => obj.repo === 'ksl-api') ? branchName : 'master';
+  const apiBranch = repos.some(obj => obj.repo === 'ksl-api') ? branchName : 'master';
   return `
     <VirtualHost *:80>
       ServerName ${subdomain}.api.${testDomain}
 
-      DocumentRoot "${buildPath}/branch_ksl-api_${jobsBranch}/public_html"
+      DocumentRoot "${buildPath}/branch_ksl-api_${apiBranch}/public_html"
 
-      <Directory "${buildPath}/branch_ksl-api_${jobsBranch}/public_html">
+      <Directory "${buildPath}/branch_ksl-api_${apiBranch}/public_html">
         AllowOverride All
         Order allow,deny
         allow from all
@@ -40,9 +40,9 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
     <VirtualHost *:443>
       ServerName ${subdomain}.api.${testDomain}
 
-      DocumentRoot "${buildPath}/branch_ksl-api_${jobsBranch}/public_html"
+      DocumentRoot "${buildPath}/branch_ksl-api_${apiBranch}/public_html"
 
-      <Directory "${buildPath}/branch_ksl-api_${jobsBranch}/public_html">
+      <Directory "${buildPath}/branch_ksl-api_${apiBranch}/public_html">
         AllowOverride All
         Order allow,deny
         allow from all
