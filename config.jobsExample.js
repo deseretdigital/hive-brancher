@@ -58,7 +58,7 @@ module.exports = {
         },
         {
           proc: 'sudo',
-          args: ['cp', '-r', '/var/dynamic/jobs-branches/branch_ksl-api_master/*', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}'],
+          args: ['cp', '-r', '"/var/dynamic/jobs-branches/branch_ksl-api_master/*"', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}'],
           proceedOnFailure: true
         },
         {
