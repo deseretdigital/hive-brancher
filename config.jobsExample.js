@@ -52,8 +52,8 @@ module.exports = {
           proceedOnFailure: true
         },
         {
-          proc: 'rm',
-          args: ['composer.lock', 'package.lock'],
+          proc: 'sudo',
+          args: ['rm', 'composer.lock', 'package.lock'],
           proceedOnFailure: true
         },
         {
