@@ -53,12 +53,12 @@ module.exports = {
         },
         {
           proc: 'rm',
-          args: ['/var/dynamic/jobs-branches/branch_m-ksl-jobs_${branchname}/composer.lock', '/var/dynamic/jobs-branches/branch_m-ksl-jobs_${branchname}/package.lock'],
+          args: ['composer.lock', 'yarn.lock'],
           proceedOnFailure: true
         },
         {
-          proc: 'sudo',
-          args: ['cp', '-r', '/var/dynamic/jobs-branches/branch_ksl-api_master', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}'],
+          proc: 'cp',
+          args: ['/var/dynamic/jobs-branches/branch_ksl-api_master/*', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}'],
           proceedOnFailure: true
         },
         {
