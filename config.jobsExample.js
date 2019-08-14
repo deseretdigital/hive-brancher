@@ -58,7 +58,7 @@ module.exports = {
         },
         {
           proc: 'cp',
-          args: ['/var/dynamic/jobs-branches/branch_ksl-api_master/*', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}'],
+          args: ['-r', '/var/dynamic/jobs-branches/branch_ksl-api_master/*', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}'],
           proceedOnFailure: true
         },
         {
