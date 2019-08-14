@@ -52,8 +52,8 @@ module.exports = {
           proceedOnFailure: true
         },
         {
-          proc: 'sudo',
-          args: ['rm', 'composer.lock', 'package.lock'],
+          proc: 'rm',
+          args: ['/var/dynamic/jobs-branches/branch_m-ksl-jobs_${branchname}/composer.lock', '/var/dynamic/jobs-branches/branch_m-ksl-jobs_${branchname}/package.lock'],
           proceedOnFailure: true
         },
         {
