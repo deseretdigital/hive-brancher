@@ -60,6 +60,11 @@ module.exports = {
           proc: 'ln',
           args: ['-nfs', '/var/dynamic/jobs-branches/branch_m-ksl-jobs_${branchname}/site-api/', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}/public_html/classifieds/jobs'],
           proceedOnFailure: true
+        },
+        {
+          proc: 'chown',
+          args: ['-R', 'www-data:www-data', '/var/dynamic/jobs-branches/branch_m-ksl-jobs_${branchname}'],
+          proceedOnFailure: true
         }
       ],
       webhook: ''
@@ -73,6 +78,11 @@ module.exports = {
         {
           proc: 'sudo',
           args: ['npm', 'run', 'brancher'],
+          proceedOnFailure: true
+        },
+        {
+          proc: 'chown',
+          args: ['-R', 'www-data:www-data', '/var/dynamic/jobs-branches/branch_m-ksl-myaccount_${branchname}'],
           proceedOnFailure: true
         }
       ],
