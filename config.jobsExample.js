@@ -57,13 +57,13 @@ module.exports = {
           proceedOnFailure: true
         },
         {
-          proc: 'cp',
-          args: ['-r', '/var/dynamic/jobs-branches/branch_ksl-api_master/.', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}/'],
+          proc: 'rsync',
+          args: ['-a', '/var/dynamic/jobs-branches/branch_ksl-api_master/', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}/'],
           proceedOnFailure: true
         },
         {
           proc: 'ln',
-          args: ['-nfs', '/var/dynamic/jobs-branches/branch_m-ksl-jobs_${branchname}/site-api', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}/public_html/classifieds/jobs'],
+          args: ['-nfs', '/var/dynamic/jobs-branches/branch_m-ksl-jobs_${branchname}/site-api/', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}/public_html/classifieds/jobs'],
           proceedOnFailure: true
         }
       ],
