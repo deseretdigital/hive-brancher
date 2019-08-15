@@ -32,7 +32,7 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
 
       ErrorLog ${apacheLogDir}/api.${subdomain}.${testDomain}.error.log
 
-      SetEnv KSL_API_ENV dev
+      SetEnv KSL_API_ENV test
       SetEnv CUSTOM_SUBDOMAIN ${subdomain}
     </VirtualHost>
     <VirtualHost *:443>
@@ -54,7 +54,7 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
 
       ErrorLog ${apacheLogDir}/api.${subdomain}.${testDomain}.error.log
 
-      SetEnv KSL_API_ENV dev
+      SetEnv KSL_API_ENV test
       SetEnv CUSTOM_SUBDOMAIN ${subdomain}
 
       Include /etc/apache2/configs/test-ssl.conf
