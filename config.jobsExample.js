@@ -57,13 +57,8 @@ module.exports = {
           proceedOnFailure: true
         },
         {
-          proc: 'mkdir',
-          args: ['/var/dynamic/jobs-branches/branch_ksl-api_${branchname}'],
-          proceedOnFailure: true
-        },
-        {
-          proc: 'rsync',
-          args: ['-r', '/var/dynamic/jobs-branches/branch_ksl-api_master/', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}'],
+          proc: 'cp',
+          args: ['-r', '/var/dynamic/jobs-branches/branch_ksl-api_master/.', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}/'],
           proceedOnFailure: true
         },
         {
