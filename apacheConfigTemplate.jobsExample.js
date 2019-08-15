@@ -19,13 +19,6 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
       DocumentRoot "${buildPath}/branch_ksl-api_${jobsBranch}/public_html"
 
       <Directory "${buildPath}/branch_ksl-api_${jobsBranch}/public_html">
-        AllowOverride All
-        Order allow,deny
-        allow from all
-        Require all granted
-      </Directory>
-
-      <Directory ${buildPath}>
         Options FollowSymLinks
         AllowOverride All
         Order allow,deny
@@ -48,13 +41,6 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
       DocumentRoot "${buildPath}/branch_ksl-api_${jobsBranch}/public_html"
 
       <Directory "${buildPath}/branch_ksl-api_${jobsBranch}/public_html">
-        AllowOverride All
-        Order allow,deny
-        allow from all
-        Require all granted
-      </Directory>
-
-      <Directory ${buildPath}>
         Options FollowSymLinks
         AllowOverride All
         Order allow,deny
