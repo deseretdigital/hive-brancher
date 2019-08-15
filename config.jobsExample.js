@@ -52,20 +52,20 @@ module.exports = {
           proceedOnFailure: true
         },
         {
-          proc: 'rm',
-          args: ['composer.lock', 'yarn.lock'],
-          proceedOnFailure: true
-        },
-        {
           proc: 'rsync',
           args: ['-a', '/var/dynamic/jobs-branches/branch_ksl-api_master/', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}/'],
           proceedOnFailure: true
         },
         {
-          proc: 'ln',
-          args: ['-nfs', '/var/dynamic/jobs-branches/branch_m-ksl-jobs_${branchname}/site-api/', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}/public_html/classifieds/jobs'],
+          proc: 'rm',
+          args: ['composer.lock', 'yarn.lock', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}/public_html/classifieds/jobs'],
           proceedOnFailure: true
-        }
+        },
+        // {
+        //   proc: 'ln',
+        //   args: ['-nfs', '/var/dynamic/jobs-branches/branch_m-ksl-jobs_${branchname}/site-api/', '/var/dynamic/jobs-branches/branch_ksl-api_${branchname}/public_html/classifieds/jobs'],
+        //   proceedOnFailure: true
+        // }
       ],
       webhook: ''
     },
