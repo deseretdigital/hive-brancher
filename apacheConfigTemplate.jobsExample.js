@@ -141,6 +141,7 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
 
       # Zend Jobs
       RewriteRule ^\/([^/.]+\\.[^/.]+)$ ${buildPath}/branch_m-ksl-jobs_${jobsBranch}/site/public/static/$1 [L]
+      RewriteRule ^\/apple-app-site-association$ ${buildPath}/branch_m-ksl-jobs_${jobsBranch}/site/public/static/apple-app-site-association [NE,L]
       RewriteRule ^\/(css|images|js|aux)/(.*)$ ${buildPath}/branch_m-ksl-jobs_${jobsBranch}/site/public/$1/$2 [L]
       RewriteRule ^\/(.*)$ ${buildPath}/branch_m-ksl-jobs_${jobsBranch}/site/public/index.php/$1 [L]
 
