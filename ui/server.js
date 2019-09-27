@@ -19,7 +19,11 @@ app.post('/save-whitelist', (req, res, next) => {
 });
 
 app.get('/branches', (req, res, next) => {
-  Promise.resolve(resolve => resolve(getFormattedBranches())).then(allBranches => {
+  Promise.resolve(resolve => {
+    getFormattedBranches().then(allBranches => {
+      resolve(allBranches);
+    });
+  }).then(allBranches => {
     console.log(allBranches);
     res.send(allBranches);
     next();
