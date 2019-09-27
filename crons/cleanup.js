@@ -6,6 +6,7 @@ let {
 const fs = require('fs');
 const { execSync } = require('child_process');
 const getFormattedBranches = require('../lib/getFormattedBranches');
+const whitelistJsonPath = '/var/www/hive-brancher/whitelist.json';
 
 let builtFilesToKeep = ['status.json'];
 let apacheConfigsToKeep = [];
@@ -13,19 +14,38 @@ let apacheConfigsToKeep = [];
 // Grab all of the current branches from remote (github)
 Promise.resolve(getFormattedBranches())
   .then(remoteBranches => {
-    let flattenedBranches = [];
-    Object.keys(remoteBranches).forEach(repo => {
-      flattenedBranches.push(remoteBranches[repo]);
-    });
-    return [...new Set(flattenedBranches)];
-  })
-  .then(remoteBranches => {
-    // Remove branches from whitelist.json that aren't on remote
-    let currentBranches = fs.readFileSync('/var/www/hive-brancher/whitelist.json');
-    currentBranches = JSON.parse(currentBranches)
-      .filter(b => b.subdomain === 'master' || remoteBranches.indexOf(b.branch)) !== -1;
-    console.log(currentBranches);
-    return;
+    // List of files and directories to delete
+    let toDelete = [];
+
+    // Grab everything in whitelist.json
+    let currentBranches = fs.readFileSync(whitelistJsonPath);
+    currentBranches = JSON.parse(currentBranches);
+
+    // Remove things from whitelist.json that aren't on remote
+    currentBranches = currentBranches.reduce((acc, whitelistBranch) => {
+      // Always leave master
+      if(whitelistBranch.subdomain === 'master') {
+        acc.push(whitelistBranch);
+        return acc;
+      }
+
+      // Determine if branch exists on any of the remote repos 
+      let onRemote = false;
+      Object.keys(remoteBranches).forEach(remoteRepo => {
+        if(remoteBranches[remoteRepo].indexOf(whitelistBranch.branch) !== -1) {
+          onRemote = true;
+        }
+      });
+      if(onRemote) {
+        acc.push(whitelistBranch);
+        return acc;
+      }
+        
+      return acc;
+    }, []);
+
+    // Write that updated version of whitelist.json to file
+    fs.writeFileSync(whitelistJsonPath, JSON.stringify(currentBranches));
 
     // Now, generate those files to keep
     projects.forEach(p => {
@@ -37,9 +57,6 @@ Promise.resolve(getFormattedBranches())
     currentBranches.forEach(cb => {
       apacheConfigsToKeep.push(`branch_${cb.branch}.conf`);
     });
-
-    // List of files and directories to delete
-    let toDelete = [];
 
     fs.readdirSync(buildPath).forEach(builtFile => {
       if (builtFilesToKeep.indexOf(builtFile) === -1) {
