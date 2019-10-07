@@ -16,7 +16,11 @@
     border-bottom: 1px dotted #c0c0c0;
     padding-bottom: .25rem;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
+    @media (min-width: 600px) {
+      flex-direction: row;
+    }
   }
   button {
     border-radius:3px;
