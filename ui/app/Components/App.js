@@ -106,16 +106,16 @@ export default class App extends Component {
     this.setState(getInitialState());
   }
 
-  copyToClipboard(branchName) {
+  copyToClipboard(s) {
     const tmpInput = document.createElement('input');
-    tmpInput.value = branchName;
+    tmpInput.value = s;
     tmpInput.type = 'text';
     tmpInput.style.position = 'absolute';
     tmpInput.style.left = '9000vw';
     document.body.appendChild(tmpInput);
     tmpInput.select();
     document.execCommand('copy');
-    alert('Copied subdomain url to clipboard!');
+    alert(`Copied ${s} to clipboard!`);
     document.body.removeChild(tmpInput);
   }
 
