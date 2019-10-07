@@ -44,8 +44,8 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "css-loader": "^2.1.1",
-    "sass": "^1.19.0",
-    "sass-loader": "^7.0.1",
-    "style-loader": "^0.21.0"
+    "sass": "^1.23.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0"
   }
 }
