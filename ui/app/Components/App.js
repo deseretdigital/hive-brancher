@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import findIndex from 'lodash/findIndex';
-import { testDomain } from '../../../config.js';
+import { testDomain, portRange } from '../../../config.js';
+const _portRange = portRange || { min: 3000, max: 3050 };
 
 import './Style/App.scss';
 
@@ -34,6 +35,25 @@ export default class App extends Component {
 
   loadWhitelist() {
     this.props.loadWhitelist();
+  }
+
+  assignPort() {
+    const { whitelist } = this.props;
+    const usedPorts = [];
+    const ports = [];
+    for(let i = _portRange.min; i <= _portRange.max; i++) {
+      ports.push(i);
+    }
+    whitelist.forEach(subdomain => {
+      if(subdomain.port) {
+        usedPorts.push(subdomain.port * 1);
+      }
+    });
+    const diff = (a, b) => {
+      return b.filter((i) => { return a.indexOf(i) < 0; });
+    };
+    const availablePorts = diff(usedPorts, ports);
+    return availablePorts.length === 0 ? -1 : Math.min(...availablePorts);
   }
 
   handleDeleteSubdomain(subdomainInfo) {
@@ -75,10 +95,9 @@ export default class App extends Component {
       return;
     }
 
-
     saveWhitelist([
       ...whitelist,
-      { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString() }
+      { branch: this.state.branch, subdomain: this.state.subdomain.toLowerCase(), user: this.state.user, created: currentDate.toLocaleString(), port: this.assignPort() }
     ])
   }
 
