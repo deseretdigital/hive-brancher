@@ -91,14 +91,44 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
 		ExpiresActive on
 	        ExpiresDefault "now plus 5 minutes"
 
-	        AddOutputFilterByType DEFLATE text/css application/x-javascript
-	        BrowserMatch "^" no-gzip
-	        BrowserMatch "\bGooglebot" !no-gzip
-	        BrowserMatch "\bFirefox.3" !no-gzip
-	        BrowserMatch "\bMSIE.7" !no-gzip
-	        BrowserMatch "\bMSIE.8" !no-gzip
-	        BrowserMatch "\bSafari.3" !no-gzip
-	        RewriteEngine on
+            RewriteEngine on
+
+            AddOutputFilterByType DEFLATE text/css text/plain text/html application/javascript application/x-javascript
+#	        BrowserMatch "^" no-gzip
+            BrowserMatch "\bGooglebot" !no-gzip
+            BrowserMatch "\bFirefox.3" !no-gzip
+            BrowserMatch "\bMSIE.7" !no-gzip
+            BrowserMatch "\bMSIE.8" !no-gzip
+            BrowserMatch "\bSafari.3" !no-gzip
+
+                <IfModule mod_headers.c>
+                    # Serve gzip compressed CSS files if they exist 
+                    # and the client accepts gzip.
+                    RewriteCond "%{HTTP:Accept-encoding}" "gzip"
+                    RewriteCond "%{REQUEST_FILENAME}\.gz" -s
+                    RewriteRule "^(.*)\.css" "$1\.css\.gz" [QSA]
+
+                    # Serve gzip compressed JS files if they exist 
+                    # and the client accepts gzip.
+                    RewriteCond "%{HTTP:Accept-encoding}" "gzip"
+                    RewriteCond "%{REQUEST_FILENAME}\.gz" -s
+                    RewriteRule "^(.*)\.js" "$1\.js\.gz" [QSA]
+
+                    # Serve correct content types, and prevent mod_deflate double gzip.
+                    RewriteRule "\.css\.gz$" "-" [T=text/css,E=no-gzip:1]
+                    RewriteRule "\.js\.gz$" "-" [T=text/javascript,E=no-gzip:1]
+
+                    <FilesMatch "(\.js\.gz|\.css\.gz)$">
+                        # Serve correct encoding type.
+                        Header append Content-Encoding gzip
+
+                        # Force proxies to cache gzipped & 
+                        # non-gzipped css/js files separately.
+                        Header append Vary Accept-Encoding
+                    </FilesMatch>
+                </IfModule>
+
+
 	        RewriteRule \/emedia\/(.*) /emedia/emedia.php [PT,E=media:$1,E=col:slc]
 	        Alias /emedia/ /var/local/scripts/
 	        RewriteRule ^\/deals/?(.*)$ /public/deal/todaysdeals/$1
@@ -197,14 +227,43 @@ module.exports = function apacheConfigTemplate(repos, branchName, config) {
 		ExpiresActive on
 	        ExpiresDefault "now plus 5 minutes"
 
-	        AddOutputFilterByType DEFLATE text/css application/x-javascript
-	        BrowserMatch "^" no-gzip
-	        BrowserMatch "\bGooglebot" !no-gzip
-	        BrowserMatch "\bFirefox.3" !no-gzip
-	        BrowserMatch "\bMSIE.7" !no-gzip
-	        BrowserMatch "\bMSIE.8" !no-gzip
-	        BrowserMatch "\bSafari.3" !no-gzip
-	        RewriteEngine on
+            RewriteEngine on
+
+            AddOutputFilterByType DEFLATE text/css text/plain text/html application/javascript application/x-javascript
+#	        BrowserMatch "^" no-gzip
+            BrowserMatch "\bGooglebot" !no-gzip
+            BrowserMatch "\bFirefox.3" !no-gzip
+            BrowserMatch "\bMSIE.7" !no-gzip
+            BrowserMatch "\bMSIE.8" !no-gzip
+            BrowserMatch "\bSafari.3" !no-gzip
+
+                <IfModule mod_headers.c>
+                    # Serve gzip compressed CSS files if they exist 
+                    # and the client accepts gzip.
+                    RewriteCond "%{HTTP:Accept-encoding}" "gzip"
+                    RewriteCond "%{REQUEST_FILENAME}\.gz" -s
+                    RewriteRule "^(.*)\.css" "$1\.css\.gz" [QSA]
+
+                    # Serve gzip compressed JS files if they exist 
+                    # and the client accepts gzip.
+                    RewriteCond "%{HTTP:Accept-encoding}" "gzip"
+                    RewriteCond "%{REQUEST_FILENAME}\.gz" -s
+                    RewriteRule "^(.*)\.js" "$1\.js\.gz" [QSA]
+
+                    # Serve correct content types, and prevent mod_deflate double gzip.
+                    RewriteRule "\.css\.gz$" "-" [T=text/css,E=no-gzip:1]
+                    RewriteRule "\.js\.gz$" "-" [T=text/javascript,E=no-gzip:1]
+
+                    <FilesMatch "(\.js\.gz|\.css\.gz)$">
+                        # Serve correct encoding type.
+                        Header append Content-Encoding gzip
+
+                        # Force proxies to cache gzipped & 
+                        # non-gzipped css/js files separately.
+                        Header append Vary Accept-Encoding
+                    </FilesMatch>
+                </IfModule>
+
 	        RewriteRule \/emedia\/(.*) /emedia/emedia.php [PT,E=media:$1,E=col:slc]
 	        Alias /emedia/ /var/local/scripts/
 	        RewriteRule ^\/deals/?(.*)$ /public/deal/todaysdeals/$1
