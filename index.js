@@ -1,4 +1,5 @@
 const config = require('./config.js');
+const whitelist = require('./whitelist.json');
 
 const { projects = [], apacheConfigDir, buildPath } = config;
 require('dotenv').config();
@@ -21,7 +22,7 @@ Promise.resolve(projects)
     .map((...args) => buildBranches(...args, buildPath), { concurrency: 1 })
     .then((branchList) => setupBranches(branchList, config))
     .then((branchList) => writeStatus(branchList, config))
-    .then((branches) => cleanupBranches(branches, config))
+    .then((branches) => cleanupBranches(branches, config, whitelist))
     .then((...args) => {
         log('Brancher finished');
     });
