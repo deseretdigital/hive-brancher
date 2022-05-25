@@ -11,6 +11,7 @@
     "lodash": "^4.17.19",
     "node-fetch": "^2.6.0",
     "remove": "^0.1.5",
-    "simple-git": "^1.122.0"
+    "simple-git": "^1.122.0",
+    "glob": "^7.1.3"
   }
 }
