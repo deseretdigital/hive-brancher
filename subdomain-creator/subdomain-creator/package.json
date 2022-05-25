@@ -1,0 +1,28 @@
+{
+  "name": "subdomain-creator",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@deseretdigital/cascade.button": "^1.10.0",
+    "@deseretdigital/cascade.colors": "^1.2.1",
+    "@deseretdigital/cascade.input": "^2.2.4",
+    "@deseretdigital/cascade.modal": "^1.6.16",
+    "@deseretdigital/cascade.select": "^1.15.1",
+    "@deseretdigital/cascade.typography": "^2.2.3",
+    "github-api": "^3.4.0",
+    "mongodb": "^4.6.0",
+    "next": "12.1.6",
+    "react": "18.1.0",
+    "react-dom": "18.1.0"
+  },
+  "devDependencies": {
+    "eslint": "8.15.0",
+    "eslint-config-next": "12.1.6"
+  }
+}
