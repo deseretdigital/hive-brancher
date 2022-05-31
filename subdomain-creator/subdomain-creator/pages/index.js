@@ -71,7 +71,7 @@ export default function Index({ subdomains, branches }) {
       return;
     }
     let alreadyInUseError = false;
-    subdomains.forEach(sub => {
+    currentSubdomains.forEach(sub => {
       if(sub.subdomain === subdomain) {
         setError('Subdomain already in use');
         alreadyInUseError = true;
@@ -100,6 +100,16 @@ export default function Index({ subdomains, branches }) {
     <>
       <Layout>
         <Typography variant="h1">Current Subdomains</Typography>
+        <div className="subdomain-row" key={subdomain._id}>
+          <Typography variant="h4">
+            Subdomain
+          </Typography>
+          <Typography variant="h4">Branch</Typography>
+          <Typography variant="h4">Created by</Typography>
+          <Typography variant="h4">Ports</Typography>
+          <Typography variant="h4">When</Typography>
+          <Typography variant="h4">Options</Typography>
+        </div>
         {currentSubdomains.map(subdomain => (
           <div className="subdomain-row" key={subdomain._id}>
             <Typography 

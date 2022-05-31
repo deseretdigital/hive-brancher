@@ -17,7 +17,7 @@ export default function Layout({ children }) {
         <div className="subdomain-creator-header">
             <Link href="/"><a style={{background: router.pathname === '/' ? colors['dark-blue'] : colors.blue}}>Subdomains</a></Link>
             <Link href="/repos"><a style={{background: router.pathname === '/repos' ? colors['dark-blue'] : colors.blue}}>Repositories</a></Link>
-            <Typography asAnchorTag styles={{background: router.pathname === '/scripts' ? colors['dark-blue'] : colors.blue}}>Post Run Scripts</Typography>
+            <Link href="/scripts"><a style={{background: router.pathname === '/scripts' ? colors['dark-blue'] : colors.blue}}>Post Run Scripts</a></Link>
         </div>
         <div className="body">
             {children}

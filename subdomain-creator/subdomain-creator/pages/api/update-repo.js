@@ -9,7 +9,6 @@ export default async function handler(req, res) {
       const result = await reposCollection.updateOne({
           _id: new mongodb.ObjectId(_id.toString())
       }, { "$set": repoWithoutId});
-      console.log(result);
       res.status(200).json({ yay: 'you'});
       res.status(result.acknowledged ? 200 : 500).json({ modifiedCount: result.modifiedCount, error: !result.acknowledged ? 'Error updating' : null });
     } else {
