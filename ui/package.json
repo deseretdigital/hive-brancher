@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "node-sass": "^4.13.1",
     "qwest": "^4.5.0",
     "react": "^16.8.6",
